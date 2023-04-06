@@ -1,10 +1,12 @@
 import { useState } from "react";
-import PropTypes from 'prop-types';
+import { useSelector, useDispatch } from "react-redux";
+import { add } from "redux/slice";
 import { nanoid } from 'nanoid'
 import css from "./ContactForm.module.css"
 
-export default function ContactForm({contacts, onSubmit}) {
-      
+export default function ContactForm() {
+    const contacts = useSelector(state => state.contacts.contacts);
+    const dispatch = useDispatch();
     const [name, setName] = useState("");
     const [number, setNumber] = useState("");
 
@@ -36,7 +38,14 @@ export default function ContactForm({contacts, onSubmit}) {
          reset();    
          return;
         };
-        onSubmit({ name, number });
+        
+        const user = {
+        id: 'id ' + nanoid(),
+        name,
+        number,
+        }
+        
+        dispatch(add(user))
 
         reset();
     };
@@ -47,8 +56,7 @@ export default function ContactForm({contacts, onSubmit}) {
         setNumber("");
     } 
         
-
-         
+        
     return (
             <form  
             className={css.phonebook__form}    
@@ -95,15 +103,7 @@ export default function ContactForm({contacts, onSubmit}) {
 
 
 
-ContactForm.propTypes = {
-        onSubmit: PropTypes.func.isRequired,
-        contacts: PropTypes.arrayOf(
-            PropTypes.shape({
-            id: PropTypes.string.isRequired,
-            name: PropTypes.string.isRequired,
-            number: PropTypes.string.isRequired,
-        }))
-    }
+
 
 
 
